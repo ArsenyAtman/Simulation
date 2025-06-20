@@ -34,19 +34,16 @@ void initCircles()
 // TODO: substepping
 void calculatePlanets(float tick = 1.0f)
 {
-    for (int i = 0; i < countOfPlanets; ++i)
+    for (Planet& planet : planets)
     {
-        Planet& planet = planets[i];
         Vector planetAcceleration = VectorLiterals::zeroVector;
 
-        for (int j = 0; j < countOfPlanets; ++j)
+        for (const Planet& relativePlanet : planets)
         {
-            if (i == j)
+            if (&planet == &relativePlanet)
             {
                 continue;
             }
-
-            const Planet& relativePlanet = planets[j];
 
             Vector distance = relativePlanet.getPosition().sub(planet.getPosition());
             float distanceSquared = distance.lengthSquared();
