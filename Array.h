@@ -25,7 +25,7 @@ public:
 private:
 
 	static constexpr Size allocationSize = 100;
-	T allocation[allocationSize] {};
+	T allocation[allocationSize] {}; // TODO: store array of pointers to pointers of allocations for single objects
 	Size lastIndex = -1;
 };
 
