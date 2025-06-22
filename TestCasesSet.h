@@ -5,6 +5,7 @@
 #include "VectorTestCases.h"
 #include "PointersTestCases.h"
 #include "ArrayTestCases.h"
+#include "StringTestCases.h"
 
 namespace TestsCasesSet
 {
@@ -17,6 +18,7 @@ namespace TestsCasesSet
 		checkAbs,
 		checkMin,
 		checkSqrt,
+
 		checkVectorAdd,
 		checkVectorSub,
 		checkVectorScale,
@@ -24,13 +26,21 @@ namespace TestsCasesSet
 		checkVectorNormalize,
 		checkVectorLength,
 		checkVectorLengthSquared,
+
 		checkUniquePointer,
+
 		checkArrayIndexing,
 		checkArrayIteration,
 		checkArrayAdd,
 		checkArrayRemove,
 		checkArrayCopy,
 		checkArrayMove,
+
+		checkStringIndexing,
+		checkStringIteration,
+		checkStringConcatenation,
+		checkStringCopy,
+		checkStringMove
 	};
 
     constexpr int size = sizeof(testCases) / sizeof(testCase);
