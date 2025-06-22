@@ -20,10 +20,10 @@ namespace Math
     }
 
     template<typename T>
-    constexpr T sign(T value) { return value >= 0 ? 1 : -1; }
+    constexpr T sign(T value) { return value >= static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(- 1); }
 
     template<typename T>
-    constexpr T abs(T value) { return value < 0 ? -value : value; }
+    constexpr T abs(T value) { return value < static_cast<T>(0) ? -value : value; }
 
     template<typename T>
     constexpr T min(T value1, T value2) { return value1 < value2 ? value1 : value2; }
