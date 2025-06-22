@@ -21,6 +21,7 @@ namespace TestCases
 			if (array.get(i) != i)
 			{
 				check("Array indexing", false);
+				return;
 			}
 		}
 
