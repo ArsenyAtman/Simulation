@@ -28,6 +28,8 @@ namespace TestsCasesSet
 		checkVectorLengthSquared,
 
 		checkUniquePointer,
+		checkSharedPointer,
+		checkWeakPointer,
 
 		checkArrayIndexing,
 		checkArrayIteration,

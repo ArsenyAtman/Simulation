@@ -4,6 +4,8 @@
 #include "Check.h"
 
 #include "UniquePointer.h"
+#include "SharedPointer.h"
+#include "WeakPointer.h"
 
 namespace TestCases
 {
@@ -27,10 +29,38 @@ namespace TestCases
     {
         int counter = 0;
         {
-            UniquePointer<Resource> ptr = new Resource(counter);
-            check("Count of instences after allocation", counter > 0);
+            UniquePointer<Resource> ptr(new Resource(counter));
+            check("UniquePointer: Count of instances inside the scope", counter, 1);
         }
-        check("Count of instances after destruction", counter, 0);
+        check("UniquePointer: Count of instances outside the scope", counter, 0);
+    }
+
+    void checkSharedPointer()
+    {
+        int counter = 0;
+        {
+            SharedPointer<Resource> ptr(new Resource(counter));
+            {
+                SharedPointer<Resource> ptr2(ptr);
+                check("SharedPointer: Count of instances inside the scope", counter, 1);
+            }
+            check("SharedPointer: Count of instances outside the scope", counter, 1);
+        }
+        check("SharedPointer: Count of instances in the outermost scope", counter, 0);
+    }
+
+    void checkWeakPointer()
+    {
+        int counter = 0;
+        {
+            SharedPointer<Resource> ptr(new Resource(counter));
+            {
+                WeakPointer<Resource> ptr2(ptr);
+                check("WeakPointer: Count of instances inside the scope", counter, 1);
+            }
+            check("WeakPointer: Count of instances outside the scope", counter, 1);
+        }
+        check("WeakPointer: Count of instances in the outermost scope", counter, 0);
     }
 }
 
