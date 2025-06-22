@@ -24,10 +24,13 @@ sf::CircleShape planetCircles[countOfPlanets];
 
 void initCircles()
 {
-    for (int i = 0; i < countOfPlanets; ++i)
+
+    sf::CircleShape* planetCirclesPtr = planetCircles;
+    sf::CircleShape* planetCirclesEndPtr = planetCircles + countOfPlanets;
+    for ( ; planetCirclesPtr < planetCirclesEndPtr; ++planetCirclesPtr)
     {
-        planetCircles[i] = sf::CircleShape(planets[i].getRadius());
-        planetCircles[i].setFillColor(sf::Color::Black);
+        *(planetCirclesPtr) = sf::CircleShape((planets + (planetCirclesPtr - planetCircles))->getRadius());
+        (planetCirclesPtr)->setFillColor(sf::Color::Black);
     }
 }
 
