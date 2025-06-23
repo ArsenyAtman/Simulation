@@ -25,20 +25,55 @@ public:
 		referenceCounter->addWeakReference();
 	}
 
-	WeakPointer(const WeakPointer<T>& weakPointer) :
-		resource(weakPointer.get()),
-		referenceCounter(weakPointer.getReferenceCounter())
+	~WeakPointer()
+	{
+		unreferenceResource();
+	}
+
+	WeakPointer(const WeakPointer<T>& other) : // copy constructor
+		resource(other.resource),
+		referenceCounter(other.referenceCounter)
 	{
 		referenceCounter->addWeakReference();
 	}
 
-	~WeakPointer()
+	WeakPointer(const WeakPointer<T>&& other) : // move constructor
+		resource(other.resource),
+		referenceCounter(other.referenceCounter)
 	{
-		referenceCounter->removeWeakReference();
-		if (referenceCounter->isValidCounter() == false)
+		referenceCounter->addWeakReference();
+	}
+
+	WeakPointer& operator = (const WeakPointer<T>& other) // copy operator
+	{
+		if (this == &other)
 		{
-			delete referenceCounter;
+			return *this;
 		}
+
+		unreferenceResource();
+
+		resource = other.resource;
+		referenceCounter = other.referenceCounter;
+		referenceCounter->addWeakReference();
+
+		return *this;
+	}
+
+	WeakPointer& operator = (const WeakPointer<T>&& other) // move operator
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		unreferenceResource();
+
+		resource = other.resource;
+		referenceCounter = other.referenceCounter;
+		referenceCounter->addWeakReference();
+
+		return *this;
 	}
 
 	bool isValid() const
@@ -59,6 +94,15 @@ public:
 	// TODO: copy operator
 
 private:
+
+	void unreferenceResource()
+	{
+		referenceCounter->removeWeakReference();
+		if (referenceCounter->isValidCounter() == false)
+		{
+			delete referenceCounter;
+		}
+	}
 
 	ReferenceCounter* referenceCounter;
 	T* resource;

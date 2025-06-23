@@ -17,14 +17,67 @@ public:
 		// ...
 	}
 
-	SharedPointer(const SharedPointer<T>& other) :
+	// TODO: Convert from weak ptr to shared pointer, but prevent the coversion in case where the weak pointer leads to a resource managed by unique pointer
+
+	~SharedPointer()
+	{
+		unreferenceResource();
+	}
+
+	SharedPointer(const SharedPointer<T>& other) : // copy constructor
 		resource(other.resource),
 		referenceCounter(other.referenceCounter)
 	{
 		referenceCounter->addSharedReference();
 	}
 
-	~SharedPointer()
+	SharedPointer& operator = (const SharedPointer<T>& other) // copy operator
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		unreferenceResource();
+
+		resource = other.resource;
+		referenceCounter = other.referenceCounter;
+		referenceCounter->addSharedReference();
+
+		return *this;
+	}
+
+	SharedPointer(const SharedPointer<T>&& other) : // move constructor
+		resource(other.resource),
+		referenceCounter(other.referenceCounter)
+	{
+		referenceCounter->addSharedReference();
+	}
+
+	SharedPointer& operator = (const SharedPointer<T>&& other) // move operator
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		unreferenceResource();
+
+		resource = other.resource;
+		referenceCounter = other.referenceCounter;
+		referenceCounter->addSharedReference();
+
+		return *this;
+	}
+
+	ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
+	T* get() const { return resource; }
+
+	// TODO: copy operator
+
+private:
+
+	void unreferenceResource()
 	{
 		referenceCounter->removeSharedReference();
 
@@ -38,13 +91,6 @@ public:
 			delete referenceCounter;
 		}
 	}
-
-	ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
-	T* get() const { return resource; }
-
-	// TODO: copy operator
-
-private:
 
 	ReferenceCounter* referenceCounter;
 	T* resource;

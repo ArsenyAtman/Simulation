@@ -16,10 +16,47 @@ public:
         // ...
     }
 
+    ~UniquePointer()
+    {
+        cleanUpResource();
+    }
+
     // Forbid copying
     UniquePointer(const UniquePointer<T>& other) = delete;
+    UniquePointer& operator = (const UniquePointer<T>& other) = delete;
 
-    ~UniquePointer()
+    UniquePointer(UniquePointer<T>&& other) :
+        resource(other.resource),
+        referenceCounter(other.referenceCounter)
+    {
+        referenceCounter->addSharedReference();
+
+        other.resource = nullptr;
+    }
+
+    UniquePointer& operator = (UniquePointer<T>&& other)
+    {
+        if (this == &other)
+        {
+            return *this;
+        }
+
+        cleanUpResource();
+
+        resource = other.resource;
+        referenceCounter = other.referenceCounter();
+        referenceCounter->addSharedReference();
+
+        other.resource = nullptr;
+
+    }
+    
+    ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
+    T* get() const { return resource; }
+
+private:
+
+    void cleanUpResource()
     {
         referenceCounter->removeSharedReference();
         if (referenceCounter->isValidCounter() == false)
@@ -29,11 +66,6 @@ public:
 
         delete resource;
     }
-    
-    ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
-    T* get() const { return resource; }
-
-private:
 
     ReferenceCounter* referenceCounter;
     T* resource;
