@@ -8,6 +8,8 @@ class Array
 {
 
 public:
+
+	using SortCondition = bool(*)(T a, T b);
 	
 	Array(Size size = 10) : // TODO: use methods of the implementation here instead of hardcode
 		allocationSize(size * (1.0f + allocationGap)),
@@ -35,6 +37,10 @@ public:
 	Size length() const { return  getLastIndex() + 1; }
 
 	Size getAllocationSize() const { return allocationSize; }
+
+	void sort(Array::SortCondition condition = [](T a, T b) { return a < b; });
+
+	void swap(Size atIndex1, Size atIndex2);
 
 private:
 
@@ -156,6 +162,32 @@ Size Array<T>::getRecommendedAllocationSize() const
 	}
 
 	return allocationSize;
+}
+
+template<typename T>
+void Array<T>::sort(Array<T>::SortCondition condition) // TODO: implement quick sort
+{
+	for (int i = 0; i < this->length(); ++i)
+	{
+		for (int j = 0; j < this->length(); ++j)
+		{
+			if (condition(this->get(i), this->get(j)))
+			{
+				this->swap(i, j);
+			}
+		}
+	}
+}
+
+template<typename T>
+void Array<T>::swap(Size atIndex1, Size atIndex2)
+{
+	if ((atIndex1 != atIndex2) && (atIndex1 >= 0 && atIndex1 <= lastIndex) && (atIndex2 >= 0 && atIndex2 <= lastIndex))
+	{
+		T* cup = allocation[atIndex1];
+		allocation[atIndex1] = allocation[atIndex2];
+		allocation[atIndex2] = cup;
+	}
 }
 
 #endif

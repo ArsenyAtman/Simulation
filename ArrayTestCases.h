@@ -68,6 +68,12 @@ namespace TestCases
 
 	// TODO: check removing only 0 index
 
+	// TODO: swap
+
+	// TODO: memory leaks test
+
+	// TODO: sort supporting lambdas
+
 	void checkArrayRemove()
 	{
 		Array<int> array(0);
@@ -93,6 +99,33 @@ namespace TestCases
 	void checkArrayMove()
 	{
 		check("Array move", false);
+	}
+
+	void checkArraySort()
+	{
+		Array<int> array;
+		for (int i = 10; i >= 0; --i)
+		{
+			array.add(i);
+		}
+
+		auto sortCondition{ [](int a, int b)
+		{
+			return a < b;
+		} };
+
+		array.sort(sortCondition);
+
+		for (int i = 0; i <= 10; ++i)
+		{
+			if (array.get(i) != i)
+			{
+				check("Array sort", array.get(i), i);
+				return;
+			}
+		}
+
+		check("Array sort", true);
 	}
 }
 

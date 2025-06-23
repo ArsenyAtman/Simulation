@@ -38,6 +38,7 @@ namespace TestsCasesSet
 		checkArrayRemove,
 		checkArrayCopy,
 		checkArrayMove,
+		checkArraySort,
 
 		checkStringIndexing,
 		checkStringIteration,
