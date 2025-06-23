@@ -9,7 +9,7 @@ namespace TestCases
 {
 	void checkArrayIndexing()
 	{
-		Array<int> array;
+		Array<int> array(0);
 		for (int i = 0; i < 5; ++i)
 		{
 			array.add(i);
@@ -28,6 +28,25 @@ namespace TestCases
 		check("Array indexing", true);
 	}
 
+	void checkArrayAllocationOpt()
+	{
+		Array<int> array(0);
+		int prevAllocationSize = array.getAllocationSize();
+		for (int i = 0; i < 50; ++i)
+		{
+			array.add(i);
+
+			if (prevAllocationSize > array.getAllocationSize())
+			{
+				check("Array allocation optimization", false);
+			}
+
+			prevAllocationSize = array.getAllocationSize();
+		}
+
+		check("Array allocation optimization", true);
+	}
+
 	void checkArrayIteration()
 	{
 		check("Array iteration", false);
@@ -35,7 +54,7 @@ namespace TestCases
 
 	void checkArrayAdd()
 	{
-		Array<int> array;
+		Array<int> array(0);
 		for (int i = 0; i < 5; ++i)
 		{
 			array.add(i);
@@ -45,9 +64,13 @@ namespace TestCases
 		check("Array add length", array.length(), 5);
 	}
 
+	// TODO: check filling of an array with the default allocation size
+
+	// TODO: check removing only 0 index
+
 	void checkArrayRemove()
 	{
-		Array<int> array;
+		Array<int> array(0);
 		for (int i = 0; i < 5; ++i)
 		{
 			array.add(i);

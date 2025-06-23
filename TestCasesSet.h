@@ -32,6 +32,7 @@ namespace TestsCasesSet
 		checkWeakPointer,
 
 		checkArrayIndexing,
+		checkArrayAllocationOpt,
 		checkArrayIteration,
 		checkArrayAdd,
 		checkArrayRemove,
