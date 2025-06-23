@@ -19,7 +19,17 @@ namespace TestCases
 {
     void check(const char* name, bool value)
     {
+        if (value)
+        {
+            std::cout << "[+]";
+        }
+        else
+        {
+            std::cout << "[-]";
+        }
+
         std::cout << "\"" << name << "\" - ";
+
         if (value)
         {
             std::cout << "passed.";
@@ -36,8 +46,20 @@ namespace TestCases
     template <typename T>
     void check(const char* name, T actualValue, T expectedValue)
     {
+        bool checkResult = (actualValue == expectedValue);
+
+        if (checkResult)
+        {
+            std::cout << "[+]";
+        }
+        else
+        {
+            std::cout << "[-]";
+        }
+
         std::cout << "\"" << name << "\" - ";
-        if (actualValue == expectedValue)
+
+        if (checkResult)
         {
             std::cout << "passed.";
             ++TestStats::passedChecks;
