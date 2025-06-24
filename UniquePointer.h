@@ -9,47 +9,15 @@ class UniquePointer
 
 public:
 
-    explicit UniquePointer(T* managedResource) :
-        resource(managedResource),
-        referenceCounter(new ReferenceCounter())
-    {
-        // ...
-    }
-
-    ~UniquePointer()
-    {
-        cleanUpResource();
-    }
+    explicit UniquePointer(T* managedResource);
+    UniquePointer(UniquePointer<T>&& other);
+    UniquePointer<T>& operator = (UniquePointer<T>&& other);
 
     // Forbid copying
     UniquePointer(const UniquePointer<T>& other) = delete;
-    UniquePointer& operator = (const UniquePointer<T>& other) = delete;
+    UniquePointer<T>& operator = (const UniquePointer<T>& other) = delete;
 
-    UniquePointer(UniquePointer<T>&& other) :
-        resource(other.resource),
-        referenceCounter(other.referenceCounter)
-    {
-        referenceCounter->addSharedReference();
-
-        other.resource = nullptr;
-    }
-
-    UniquePointer& operator = (UniquePointer<T>&& other)
-    {
-        if (this == &other)
-        {
-            return *this;
-        }
-
-        cleanUpResource();
-
-        resource = other.resource;
-        referenceCounter = other.referenceCounter();
-        referenceCounter->addSharedReference();
-
-        other.resource = nullptr;
-
-    }
+    ~UniquePointer();
     
     ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
 
@@ -61,19 +29,64 @@ public:
 
 private:
 
-    void cleanUpResource()
-    {
-        referenceCounter->removeSharedReference();
-        if (referenceCounter->isValidCounter() == false)
-        {
-            delete referenceCounter;
-        }
-
-        delete resource;
-    }
+    void cleanUpResource();
 
     ReferenceCounter* referenceCounter;
     T* resource;
 };
+
+template<typename T>
+UniquePointer<T>::UniquePointer(T* managedResource) :
+    resource(managedResource),
+    referenceCounter(new ReferenceCounter())
+{
+    // ...
+}
+
+template<typename T>
+UniquePointer<T>::UniquePointer(UniquePointer<T>&& other) :
+    resource(other.resource),
+    referenceCounter(other.referenceCounter)
+{
+    referenceCounter->addSharedReference();
+
+    other.resource = nullptr;
+}
+
+template<typename T>
+UniquePointer<T>& UniquePointer<T>::operator = (UniquePointer<T>&& other)
+{
+    if (this == &other)
+    {
+        return *this;
+    }
+
+    cleanUpResource();
+
+    resource = other.resource;
+    referenceCounter = other.referenceCounter();
+    referenceCounter->addSharedReference();
+
+    other.resource = nullptr;
+
+}
+
+template<typename T>
+UniquePointer<T>::~UniquePointer()
+{
+    cleanUpResource();
+}
+
+template<typename T>
+void UniquePointer<T>::cleanUpResource()
+{
+	referenceCounter->removeSharedReference();
+	if (referenceCounter->isValidCounter() == false)
+	{
+		delete referenceCounter;
+	}
+
+	delete resource;
+}
 
 #endif
