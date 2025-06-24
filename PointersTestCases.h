@@ -30,7 +30,7 @@ namespace TestCases
         int counter = 0;
         {
             UniquePointer<Resource> ptr(new Resource(counter));
-            check("UniquePointer: Count of instances inside the scope", counter, 1);
+            check("UniquePointer: Count of instances inside the scope", ptr->counterRef, 1);
         }
         check("UniquePointer: Count of instances outside the scope", counter, 0);
     }
@@ -42,7 +42,7 @@ namespace TestCases
             SharedPointer<Resource> ptr(new Resource(counter));
             {
                 SharedPointer<Resource> ptr2(ptr);
-                check("SharedPointer: Count of instances inside the scope", counter, 1);
+                check("SharedPointer: Count of instances inside the scope", ptr->counterRef, 1);
             }
             check("SharedPointer: Count of instances outside the scope", counter, 1);
         }
@@ -56,7 +56,7 @@ namespace TestCases
             SharedPointer<Resource> ptr(new Resource(counter));
             {
                 WeakPointer<Resource> ptr2(ptr);
-                check("WeakPointer: Count of instances inside the scope", counter, 1);
+                check("WeakPointer: Count of instances inside the scope", ptr->counterRef, 1);
             }
             check("WeakPointer: Count of instances outside the scope", counter, 1);
         }

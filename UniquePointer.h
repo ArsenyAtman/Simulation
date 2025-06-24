@@ -52,7 +52,12 @@ public:
     }
     
     ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
-    T* get() const { return resource; }
+
+    const T* get() const { return resource; }
+    T* get() { return resource; }
+
+    T* operator -> () { return this->get(); }
+    const T* operator -> () const { return this->get(); }
 
 private:
 

@@ -71,9 +71,12 @@ public:
 	}
 
 	ReferenceCounter* getReferenceCounter() const { return referenceCounter; }
-	T* get() const { return resource; }
 
-	// TODO: copy operator
+	T* get() { return resource; }
+	const T* get() const { return resource; }
+
+	T* operator -> () { return this->get(); }
+	const T* operator -> () const { return this->get(); }
 
 private:
 

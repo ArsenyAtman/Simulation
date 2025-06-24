@@ -11,16 +11,16 @@ class WeakPointer
 
 public:
 
-	WeakPointer(const SharedPointer<T>& sharedPointer) :
+	WeakPointer(SharedPointer<T>& sharedPointer) :
 		resource(sharedPointer.get()),
 		referenceCounter(sharedPointer.getReferenceCounter())
 	{
 		referenceCounter->addWeakReference();
 	}
 
-	WeakPointer(const UniquePointer<T>& uniquePointer) :
-		resource(uniquePointer.get()),
-		referenceCounter(uniquePointer.getReferenceCounter())
+	WeakPointer(UniquePointer<T>& uniquePointer) :
+		resource(uniquePointer.resource),
+		referenceCounter(uniquePointer.referenceCounter)
 	{
 		referenceCounter->addWeakReference();
 	}
@@ -81,7 +81,7 @@ public:
 		return referenceCounter->isValidResource();
 	}
 
-	T* get() const
+	T* get()
 	{
 		if (referenceCounter->isValidCounter())
 		{
@@ -90,8 +90,19 @@ public:
 
 		return nullptr;
 	}
-	
-	// TODO: copy operator
+
+	const T* get() const
+	{
+		if (referenceCounter->isValidCounter())
+		{
+			return resource;
+		}
+
+		return nullptr;
+	}
+
+	T* operator -> () { return this->get(); }
+	const T* operator -> () const { return this->get(); }
 
 private:
 
