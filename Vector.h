@@ -40,9 +40,9 @@ public:
         return Math::equal(this->x, other.x) && Math::equal(this->y, other.y);
     }
 
-    constexpr Vector operator+(const Vector& other) const { return this->sum(other); }
-    constexpr Vector operator-(const Vector& other) const { return this->sub(other); }
-    constexpr Vector operator*(float value) const { return this->scale(value); }
+    constexpr Vector operator + (const Vector& other) const { return this->sum(other); }
+    constexpr Vector operator - (const Vector& other) const { return this->sub(other); }
+    constexpr Vector operator * (float value) const { return this->scale(value); }
     constexpr bool operator == (const Vector& other) const { return this->equal(other); }
 
     constexpr Vector& null()
