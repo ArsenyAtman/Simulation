@@ -27,8 +27,8 @@ public:
 
     void update(const Vector& acceleraion, float deltaTime)
     {
-        velocity = velocity.add(acceleraion.scale(deltaTime));
-        position = position.add(velocity.scale(deltaTime));
+        velocity = velocity + acceleraion * deltaTime;
+        position = position + velocity * deltaTime;
     }
 
 private:

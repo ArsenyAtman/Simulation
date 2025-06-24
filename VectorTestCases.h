@@ -10,13 +10,15 @@ namespace TestCases
     void checkVectorAdd()
     {
         Vector vector = Vector(3.0f, 3.0f);
-        check("Vector addition", vector.add(vector), vector.scale(2.0f));
+        check("Vector addition", vector.sum(vector), vector * 2);
+        check("Vector operator addition", vector + vector, vector * 2);
     }
 
     void checkVectorSub()
     {
         Vector vector = Vector(3.0f, 3.0f);
-        check("Vector substraction", vector.sub(vector) == VectorLiterals::zeroVector);
+        check("Vector substraction", vector.sub(vector), VectorLiterals::zeroVector);
+        check("Vector operator substraction", vector - vector, VectorLiterals::zeroVector);
     }
 
     void checkVectorScale()
@@ -26,6 +28,9 @@ namespace TestCases
 
         check("Vector scale length", vector.length() == vectorOne.scale(3.0f).length());
         check("Vector scale coords", vector == vectorOne.scale(3.0f));
+
+        check("Vector operator scale length", (vectorOne * 3.0f).length(), vector.length());
+        check("Vector operator scale coords", vectorOne * 3.0f, vector);
     }
 
     void checkVectorNull()

@@ -14,7 +14,7 @@ constexpr float timeScale = 10000.0f;
 
 
 Planet planets[] = {
-    Planet(10.0f, Vector(50.0f, 150.0f), VectorLiterals::xOneVector.scale(0.0075f)),
+    Planet(10.0f, Vector(50.0f, 150.0f), VectorLiterals::xOneVector * 0.0075f),
     Planet(30.0f, Vector(50.0f, 300.f), VectorLiterals::zeroVector)
     };
 
@@ -48,7 +48,7 @@ void calculatePlanets(float tick = 1.0f)
                 continue;
             }
 
-            Vector distance = relativePlanet.getPosition().sub(planet.getPosition());
+            Vector distance = relativePlanet.getPosition() - planet.getPosition();
             float distanceSquared = distance.lengthSquared();
 
             float F = 0.0f;
@@ -58,8 +58,8 @@ void calculatePlanets(float tick = 1.0f)
                 F = Physics::calculateGravityForce(PhysicsValues::getG(), planet.getMass(), relativePlanet.getMass(), distanceSquared);
             }
 
-            Vector relativeAcceleration = distance.normalize().scale(F).scale(1.0f / planet.getMass());
-            planetAcceleration = planetAcceleration.add(relativeAcceleration);
+            Vector relativeAcceleration = distance.normalize() * F * (1.0f / planet.getMass());
+            planetAcceleration = planetAcceleration + relativeAcceleration;
         }
 
         planet.update(planetAcceleration, tick);
