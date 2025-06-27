@@ -1,43 +1,42 @@
 #ifndef PLANET_H
 #define PLANET_H
 
+#include "Object.h"
 #include "Vector.h"
 #include "Math.h"
 #include "PhysicsValues.h"
+#include "SphereBody.h"
+#include "UniquePointer.h"
+#include "Move.h"
 
-class Planet
+#include <utility>
+
+class Planet : public Object
 {
 
 public:
 
-    constexpr Planet(float initialRadius, Vector initialPosition, Vector initialVelocity) :
-        radius(initialRadius),
-        mass(4.0f / 3.0f * Math::getPI() * Math::pow(radius, 3) * PhysicsValues::getPlanetDensity()),
-        position(initialPosition),
+    Planet(Vector initialPosition, UniquePointer<SphereBody> planetBody, Vector initialVelocity) :
+        Object(initialPosition),
+        body(Move::move(planetBody)),
         velocity(initialVelocity)
     {
         // ...
     }
 
-    constexpr float getRadius() const { return radius; }
-    constexpr float getMass() const { return mass; }
-
-    constexpr const Vector& getPosition() const { return position; }
-    constexpr const Vector& getVelocity() const { return velocity; }
+    const UniquePointer<SphereBody>& getBody() const { return body; }
+    const Vector& getVelocity() const { return velocity; }
 
     void update(const Vector& acceleraion, float deltaTime)
     {
         velocity = velocity + acceleraion * deltaTime;
-        position = position + velocity * deltaTime;
+        setPosition(getPosition() + velocity * deltaTime);
     }
 
 private:
 
-    // TODO: initialization values
-    float radius;
-    float mass;
+    UniquePointer<SphereBody> body;
 
-    Vector position;
     Vector velocity;
 
 };
