@@ -18,7 +18,7 @@ public:
 
     Planet(Vector initialPosition, UniquePointer<SphereBody> planetBody, Vector initialVelocity) :
         Object(initialPosition),
-        body(Move::move(planetBody)),
+        body(MOVE(planetBody)),
         velocity(initialVelocity)
     {
         // ...

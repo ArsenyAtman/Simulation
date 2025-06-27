@@ -1,6 +1,8 @@
 #ifndef MOVE_H
 #define MOVE_H
 
+#define MOVE(...) static_cast<Move::unref<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+
 namespace Move
 {
 	template<typename T>
@@ -10,22 +12,19 @@ namespace Move
 	};
 
 	template<typename T>
-	struct removeRef<T&>
+	struct removeRef<T&> // specialization for refs
 	{
 		using type = T;
 	};
 
 	template<typename T>
-	struct removeRef<T&&>
+	struct removeRef<T&&> // specialization for r-values
 	{
 		using type = T;
 	};
 
 	template<typename T>
-	using unref = typename removeRef<T>::type;
-
-	template<typename T>
-	constexpr unref<T>&& move(T&& value) { return static_cast<unref<T>&&>(value); }
+	using unref = typename removeRef<T>::type; // shorthand
 }
 
 #endif
