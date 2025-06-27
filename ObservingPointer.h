@@ -1,25 +1,23 @@
-#ifndef WEAK_POINTER_H
-#define WEAK_POINTER_H
+#ifndef OBSERVING_POINTER_H
+#define OBSERVING_POINTER_H
 
+#include "UniquePointer.h"
 #include "ReferenceCounter.h"
 
 template<typename T>
-class SharedPointer;
-
-template<typename T>
-class WeakPointer
+class ObservingPointer
 {
 
 public:
 
-	WeakPointer(SharedPointer<T>& sharedPointer);
-	WeakPointer(const WeakPointer<T>& other);
-	WeakPointer(const WeakPointer<T>&& other);
+	ObservingPointer(UniquePointer<T>& uniquePointer);
+	ObservingPointer(const ObservingPointer<T>& other);
+	ObservingPointer(const ObservingPointer<T>&& other);
 
-	WeakPointer<T>& operator = (const WeakPointer<T>& other);
-	WeakPointer<T>& operator = (const WeakPointer<T>&& other);
+	ObservingPointer<T>& operator = (const ObservingPointer<T>& other);
+	ObservingPointer<T>& operator = (const ObservingPointer<T>&& other);
 
-	~WeakPointer();
+	~ObservingPointer();
 
 	bool isValid() const { return referenceCounter->isValidResource(); }
 
@@ -37,18 +35,16 @@ private:
 	T* resource;
 };
 
-#include "SharedPointer.h"
-
 template<typename T>
-WeakPointer<T>::WeakPointer(SharedPointer<T>& sharedPointer) :
-	resource(sharedPointer.get()),
-	referenceCounter(sharedPointer.getReferenceCounter())
+ObservingPointer<T>::ObservingPointer(UniquePointer<T>& uniquePointer) :
+	resource(uniquePointer.get()),
+	referenceCounter(uniquePointer.getReferenceCounter())
 {
 	referenceCounter->addWeakReference();
 }
 
 template<typename T>
-WeakPointer<T>::WeakPointer(const WeakPointer<T>& other) : // copy constructor
+ObservingPointer<T>::ObservingPointer(const ObservingPointer<T>& other) : // copy constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -56,7 +52,7 @@ WeakPointer<T>::WeakPointer(const WeakPointer<T>& other) : // copy constructor
 }
 
 template<typename T>
-WeakPointer<T>::WeakPointer(const WeakPointer<T>&& other) : // move constructor
+ObservingPointer<T>::ObservingPointer(const ObservingPointer<T>&& other) : // move constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -64,7 +60,7 @@ WeakPointer<T>::WeakPointer(const WeakPointer<T>&& other) : // move constructor
 }
 
 template<typename T>
-WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>& other) // copy operator
+ObservingPointer<T>& ObservingPointer<T>::operator = (const ObservingPointer<T>& other) // copy operator
 {
 	if (this == &other)
 	{
@@ -81,7 +77,7 @@ WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>& other) // copy
 }
 
 template<typename T>
-WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>&& other) // move operator
+ObservingPointer<T>& ObservingPointer<T>::operator = (const ObservingPointer<T>&& other) // move operator
 {
 	if (this == &other)
 	{
@@ -98,13 +94,13 @@ WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>&& other) // mov
 }
 
 template<typename T>
-WeakPointer<T>::~WeakPointer()
+ObservingPointer<T>::~ObservingPointer()
 {
 	unreferenceResource();
 }
 
 template<typename T>
-void WeakPointer<T>::unreferenceResource()
+void ObservingPointer<T>::unreferenceResource()
 {
 	referenceCounter->removeWeakReference();
 	if (referenceCounter->isValidCounter() == false)

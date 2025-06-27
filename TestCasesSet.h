@@ -28,6 +28,7 @@ namespace TestsCasesSet
 		checkVectorLengthSquared,
 
 		checkUniquePointer,
+		checkObservingPointer,
 		checkSharedPointer,
 		checkWeakPointer,
 

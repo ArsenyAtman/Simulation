@@ -18,7 +18,7 @@ public:
 	// Forbid copying
 	ReferenceCounter(const ReferenceCounter& other) = delete;
 
-	void addSharedReference()
+	void addStrongReference()
 	{
 		++countOfReferencesToResource;
 		++countOfReferencesToCounter;

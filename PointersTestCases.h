@@ -4,6 +4,7 @@
 #include "Check.h"
 
 #include "UniquePointer.h"
+#include "ObservingPointer.h"
 #include "SharedPointer.h"
 #include "WeakPointer.h"
 
@@ -33,6 +34,20 @@ namespace TestCases
             check("UniquePointer: Count of instances inside the scope", ptr->counterRef, 1);
         }
         check("UniquePointer: Count of instances outside the scope", counter, 0);
+    }
+
+    void checkObservingPointer()
+    {
+        int counter = 0;
+        {
+            UniquePointer<Resource> ptr(new Resource(counter));
+            {
+                ObservingPointer<Resource> ptr2(ptr);
+                check("ObservingPointer: Count of instances inside the scope", ptr->counterRef, 1);
+            }
+            check("ObservingPointer: Count of instances outside the scope", counter, 1);
+        }
+        check("ObservingPointer: Count of instances in the outermost scope", counter, 0);
     }
 
     void checkSharedPointer()

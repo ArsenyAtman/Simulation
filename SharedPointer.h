@@ -5,19 +5,21 @@
 #include "Size.h"
 
 template<typename T>
+class WeakPointer;
+
+template<typename T>
 class SharedPointer
 {
 
 public:
 
 	explicit SharedPointer(T* managedResource);
+	SharedPointer(WeakPointer<T>& weakPointer);
 	SharedPointer(const SharedPointer<T>& other);
 	SharedPointer(const SharedPointer<T>&& other);
 
 	SharedPointer<T>& operator = (const SharedPointer<T>& other);
 	SharedPointer<T>& operator = (const SharedPointer<T>&& other);
-
-	// TODO: Convert from weak ptr to shared pointer, but prevent the coversion in case where the weak pointer leads to a resource managed by unique pointer
 
 	~SharedPointer();
 
@@ -37,6 +39,8 @@ private:
 	T* resource;
 };
 
+#include "WeakPointer.h"
+
 template<typename T>
 SharedPointer<T>::SharedPointer(T* managedResource) :
 	resource(managedResource),
@@ -46,11 +50,27 @@ SharedPointer<T>::SharedPointer(T* managedResource) :
 }
 
 template<typename T>
+SharedPointer<T>::SharedPointer(WeakPointer<T>& weakPointer):
+	resource(weakPointer.get()),
+	referenceCounter(weakPointer.getReferenceCounter())
+{
+	referenceCounter->addStrongReference();
+}
+
+template<typename T>
 SharedPointer<T>::SharedPointer(const SharedPointer<T>& other) : // copy constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
-	referenceCounter->addSharedReference();
+	referenceCounter->addStrongReference();
+}
+
+template<typename T>
+SharedPointer<T>::SharedPointer(const SharedPointer<T>&& other) : // move constructor
+	resource(other.resource),
+	referenceCounter(other.referenceCounter)
+{
+	referenceCounter->addStrongReference();
 }
 
 template<typename T>
@@ -65,17 +85,9 @@ SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>& other) /
 
 	resource = other.resource;
 	referenceCounter = other.referenceCounter;
-	referenceCounter->addSharedReference();
+	referenceCounter->addStrongReference();
 
 	return *this;
-}
-
-template<typename T>
-SharedPointer<T>::SharedPointer(const SharedPointer<T>&& other) : // move constructor
-	resource(other.resource),
-	referenceCounter(other.referenceCounter)
-{
-	referenceCounter->addSharedReference();
 }
 
 template<typename T>
@@ -90,7 +102,7 @@ SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>&& other) 
 
 	resource = other.resource;
 	referenceCounter = other.referenceCounter;
-	referenceCounter->addSharedReference();
+	referenceCounter->addStrongReference();
 
 	return *this;
 }

@@ -48,7 +48,7 @@ UniquePointer<T>::UniquePointer(UniquePointer<T>&& other) :
     resource(other.resource),
     referenceCounter(other.referenceCounter)
 {
-    referenceCounter->addSharedReference();
+    referenceCounter->addStrongReference();
 
     other.resource = nullptr;
 }
@@ -65,7 +65,7 @@ UniquePointer<T>& UniquePointer<T>::operator = (UniquePointer<T>&& other)
 
     resource = other.resource;
     referenceCounter = other.referenceCounter();
-    referenceCounter->addSharedReference();
+    referenceCounter->addStrongReference();
 
     other.resource = nullptr;
 
