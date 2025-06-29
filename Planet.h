@@ -5,7 +5,7 @@
 #include "Vector.h"
 #include "Math.h"
 #include "PhysicsValues.h"
-#include "SphereBody.h"
+#include "Body.h"
 #include "UniquePointer.h"
 #include "Move.h"
 
@@ -16,7 +16,7 @@ class Planet : public Object
 
 public:
 
-    Planet(Vector initialPosition, UniquePointer<SphereBody> planetBody, Vector initialVelocity) :
+    Planet(Vector initialPosition, UniquePointer<Body> planetBody, Vector initialVelocity) :
         Object(initialPosition),
         body(MOVE(planetBody)),
         velocity(initialVelocity)
@@ -24,7 +24,7 @@ public:
         // ...
     }
 
-    const UniquePointer<SphereBody>& getBody() const { return body; }
+    const UniquePointer<Body>& getBody() const { return body; }
     const Vector& getVelocity() const { return velocity; }
 
     void update(const Vector& acceleraion, float deltaTime)
@@ -35,7 +35,7 @@ public:
 
 private:
 
-    UniquePointer<SphereBody> body;
+    UniquePointer<Body> body;
 
     Vector velocity;
 

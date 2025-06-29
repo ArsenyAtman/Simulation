@@ -14,6 +14,8 @@ public:
 		// ...
 	}
 
+	virtual ~Object() = default;
+
 	const Vector& getPosition() const { return position; }
 	void setPosition(const Vector& newPosition) { position = newPosition; }
 

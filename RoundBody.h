@@ -14,6 +14,8 @@ public:
 		// ...
 	}
 
+	virtual float getSize() const override { return getRadius(); }
+
 	float getRadius() const { return radius; }
 
 private:
