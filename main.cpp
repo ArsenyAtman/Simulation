@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Physics.h"
 #include "PhysicsValues.h"
+#include "SphereBody.h"
 #include "Tests.h"
 
 #include <SFML/Graphics.hpp>
@@ -14,8 +15,8 @@ constexpr float timeScale = 10000.0f;
 
 
 Planet planets[] = {
-    Planet(Vector(50.0f, 150.0f), UniquePointer<SphereBody>(new SphereBody(10.0f, PhysicsValues::getPlanetDensity())), VectorLiterals::xOneVector * 0.0075f),
-    Planet(Vector(50.0f, 300.f), UniquePointer<SphereBody>(new SphereBody(30.0f, PhysicsValues::getPlanetDensity())), VectorLiterals::zeroVector)
+    Planet(Vector(50.0f, 150.0f), UniquePointer<Body>(new SphereBody(10.0f, PhysicsValues::getPlanetDensity())), VectorLiterals::xOneVector * 0.0075f),
+    Planet(Vector(50.0f, 300.f), UniquePointer<Body>(new SphereBody(30.0f, PhysicsValues::getPlanetDensity())), VectorLiterals::zeroVector)
     };
 
 constexpr int countOfPlanets = sizeof(planets) / sizeof(Planet);
@@ -29,7 +30,7 @@ void initCircles()
     sf::CircleShape* planetCirclesEndPtr = planetCircles + countOfPlanets;
     for ( ; planetCirclesPtr < planetCirclesEndPtr; ++planetCirclesPtr)
     {
-        *(planetCirclesPtr) = sf::CircleShape((planets + (planetCirclesPtr - planetCircles))->getBody()->getRadius());
+        *(planetCirclesPtr) = sf::CircleShape(dynamic_cast<const SphereBody*>((planets + (planetCirclesPtr - planetCircles))->getBody().get())->getSize());
         (planetCirclesPtr)->setFillColor(sf::Color::Black);
     }
 }
@@ -52,7 +53,7 @@ void calculatePlanets(float tick = 1.0f)
             float distanceSquared = distance.lengthSquared();
 
             float F = 0.0f;
-            float dangerousDistance = Math::min(planet.getBody()->getRadius(), relativePlanet.getBody()->getRadius());
+            float dangerousDistance = Math::min(planet.getBody()->getSize(), relativePlanet.getBody()->getSize());
             if (distanceSquared > Math::pow(dangerousDistance))
             {
                 F = Physics::calculateGravityForce(PhysicsValues::getG(), planet.getBody()->getMass(), relativePlanet.getBody()->getMass(), distanceSquared);

@@ -10,7 +10,7 @@ class UniquePointer
 public:
 
     explicit UniquePointer(T* managedResource);
-    UniquePointer(UniquePointer<T>&& other);
+    UniquePointer(UniquePointer<T>&& other) noexcept;
     UniquePointer<T>& operator = (UniquePointer<T>&& other);
 
     // Forbid copying
@@ -44,7 +44,7 @@ UniquePointer<T>::UniquePointer(T* managedResource) :
 }
 
 template<typename T>
-UniquePointer<T>::UniquePointer(UniquePointer<T>&& other) :
+UniquePointer<T>::UniquePointer(UniquePointer<T>&& other) noexcept :
     resource(other.resource),
     referenceCounter(other.referenceCounter)
 {

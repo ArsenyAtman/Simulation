@@ -67,11 +67,79 @@ namespace TestCases
 
 	// TODO: check removing only 0 index
 
-	// TODO: swap
+	void checkArraySwap()
+	{
+		Array<int> array1;
+		for (int i = 0; i < 10; ++i)
+		{
+			array1.add(i);
+		}
+
+		for (int i = 0; i < array1.length() / 2; ++i)
+		{
+			array1.swap(i, array1.getLastIndex() - i);
+		}
+
+		Array<int> controlArray;
+		for (int i = 9; i >= 0; --i)
+		{
+			controlArray.add(i);
+		}
+
+		check("Array swap", array1, controlArray);
+	}
+
+	void checkArrayAppend()
+	{
+		Array<int> array1;
+		for (int i = 0; i < 5; ++i)
+		{
+			array1.add(i);
+		}
+
+		Array<int> array2;
+		for (int i = 5; i < 10; ++i)
+		{
+			array2.add(i);
+		}
+
+		array1.append(array2);
+
+		Array<int> controlArray;
+		for (int i = 0; i < 10; ++i)
+		{
+			controlArray.add(i);
+		}
+
+		check("Array append", array1, controlArray);
+	}
+
+	void checkArrayConcatenate()
+	{
+		Array<int> array1;
+		for (int i = 0; i < 5; ++i)
+		{
+			array1.add(i);
+		}
+
+		Array<int> array2;
+		for (int i = 5; i < 10; ++i)
+		{
+			array2.add(i);
+		}
+
+		array1 = array1.concatenate(array2);
+
+		Array<int> controlArray;
+		for (int i = 0; i < 10; ++i)
+		{
+			controlArray.add(i);
+		}
+
+		check("Array concatenate", array1, controlArray);
+	}
 
 	// TODO: memory leaks test
-
-	// TODO: sort supporting lambdas
 
 	void checkArrayRemove()
 	{
