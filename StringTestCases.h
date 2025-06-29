@@ -15,7 +15,6 @@ namespace TestCases
 			string.add(static_cast<char>('A' + i));
 		}
 
-		bool allEqual = true;
 		for (int i = 0; i < 5; ++i)
 		{
 			if (string.get(i) != static_cast<char>('A' + i))

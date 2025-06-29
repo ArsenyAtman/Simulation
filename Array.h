@@ -146,11 +146,11 @@ Size Array<T>::getRecommendedAllocationSize() const
 {
 	if (lastIndex + 1 == allocationSize)
 	{
-		return allocationSize * (1.0f + allocationGap) + 1;
+		return allocationSize * static_cast<Size>(1.0f + allocationGap) + 1;
 	}
 	else if (lastIndex < allocationSize / (1.0f + allocationGap * 2.0f))
 	{
-		Size newSize = allocationSize / (1.0f + allocationGap);
+		Size newSize = static_cast<Size>(allocationSize / (1.0f + allocationGap));
 		if (newSize < allocationSize)
 		{
 			return newSize;

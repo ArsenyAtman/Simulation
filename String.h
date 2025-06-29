@@ -51,6 +51,8 @@ public:
 			string[size] = newChar;
 			return ++size;
 		}
+		
+		return -1;
 	}
 
 	void append(const String& other)

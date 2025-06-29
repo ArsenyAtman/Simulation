@@ -15,7 +15,6 @@ namespace TestCases
 			array.add(i);
 		}
 
-		bool allEqual = true;
 		for (int i = 0; i < 5; ++i)
 		{
 			if (array.get(i) != i)
