@@ -3,8 +3,6 @@
 
 #include "String.h"
 
-
-// TODO: implement projectwise
 class Exception
 {
 
@@ -18,11 +16,23 @@ public:
 
 	virtual ~Exception() = default;
 
-	virtual String toString() const { return message; }
+	constexpr operator String () const { return message; }
 
 private:
 
 	String message;
+};
+
+class InvalidIndexException : public Exception
+{
+	
+public:
+
+	InvalidIndexException() :
+		Exception("Invalid index!")
+	{
+		// ..
+	}
 };
 
 #endif

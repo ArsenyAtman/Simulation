@@ -2,8 +2,7 @@
 #define VECTOR_H
 
 #include "Math.h"
-
-#include <iostream>
+#include "String.h"
 
 class Vector
 {
@@ -64,6 +63,11 @@ public:
     {
         return this->scale(1.0f / this->length());
     }
+
+    constexpr operator String() const
+    {
+        return "Vector(" + String(this->x) + ", " + String(this->y) + ")";
+    }
 };
 
 namespace VectorLiterals
@@ -71,12 +75,6 @@ namespace VectorLiterals
     constexpr Vector zeroVector = Vector(0.0f, 0.0f);
     constexpr Vector xOneVector = Vector(1.0f, 0.0f);
     constexpr Vector yOneVector = Vector(0.0f, 1.0f);
-}
-
-inline std::ostream& operator << (std::ostream& cout, const Vector& vector)
-{
-    cout << "Vector(" << vector.x << ", " << vector.y << ")";
-    return cout;
 }
 
 #endif

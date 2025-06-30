@@ -7,30 +7,28 @@ class Singleton
 
 public:
 
-    static void init(T* resourceToManage)
+    static T& get()
     {
-        if(resource == nullptr)
+        if (resource == nullptr)
         {
-            resource = resourceToManage;
+            resource = new T();
         }
+
+        return *resource;
     }
 
-    static T& get() { return *resource; }
+    virtual ~Singleton()
+    {
+        delete resource;
+    }
+
+protected:
+
+    Singleton() = default;
 
 private:
 
     static inline T* resource = nullptr; // inline to allow init with the definition
-
-    Singleton() = default;
-
-    ~Singletone()
-    {
-        if (resource != nullptr)
-        {
-            delete resource;
-        }
-    }
-
-}
+};
 
 #endif

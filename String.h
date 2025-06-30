@@ -2,11 +2,11 @@
 #define STRING_H
 
 #include "Size.h"
+#include "Exception.h"
 
-#include "iostream"
+#include <string>
 
 // TODO: implement dynamic allocation
-// TODO: add everywhere the toString() method
 class String
 {
 
@@ -17,7 +17,7 @@ public:
 		// ...
 	}
 
-	constexpr String(const char str[])
+	constexpr String(const char str[]) noexcept
 	{
 		while (str[size] != '\0' && size < allocationSize)
 		{
@@ -26,6 +26,23 @@ public:
 		}
 	}
 
+	// TODO: own implementation of conversion
+	constexpr String(int value) noexcept :
+		String(std::to_string(value).c_str())
+	{
+		// ...
+	}
+
+	// TODO: own implementation of conversion
+	constexpr String(double value) noexcept :
+		String(std::to_string(value).c_str())
+	{
+		// ...
+	}
+
+	// copy
+	// move
+
 	constexpr char get(Size atIndex) const
 	{
 		if (atIndex >= 0 && atIndex < size)
@@ -33,7 +50,7 @@ public:
 			return string[atIndex];
 		}
 
-		throw "Invalid string index!";
+		throw InvalidIndexException();
 	}
 
 	constexpr char& get(Size atIndex)
@@ -43,7 +60,7 @@ public:
 			return string[atIndex];
 		}
 
-		throw "Invalid string index!";
+		throw InvalidIndexException();
 	}
 
 	Size add(char newChar)
@@ -57,7 +74,7 @@ public:
 		return -1;
 	}
 
-	void append(const String& other)
+	constexpr void append(const String& other)
 	{
 		for (int i = 0; i < other.length(); ++i)
 		{
@@ -85,6 +102,12 @@ public:
 		return true;
 	}
 
+	constexpr String& operator += (const String& other)
+	{
+		this->append(other);
+		return *this;
+	}
+
 private:
 
 	static constexpr Size allocationSize = 100;
@@ -92,14 +115,11 @@ private:
 	Size size = 0;
 };
 
-inline std::ostream& operator << (std::ostream& cout, const String& string)
+constexpr String operator + (const String& string1, const String& string2)
 {
-	for (int i = 0; i < string.length(); ++i)
-	{
-		cout << string.get(i);
-	}
-
-	return cout;
+	String newString = string1;
+	newString.append(string2);
+	return newString;
 }
 
 #endif STRING_H

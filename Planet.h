@@ -2,6 +2,7 @@
 #define PLANET_H
 
 #include "Object.h"
+
 #include "Vector.h"
 #include "Math.h"
 #include "PhysicsValues.h"

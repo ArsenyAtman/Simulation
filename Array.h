@@ -4,8 +4,7 @@
 #include "Size.h"
 #include "Move.h"
 #include <initializer_list>
-
-#include "iostream"
+#include "String.h"
 
 template <typename T>
 class Array
@@ -64,6 +63,8 @@ public:
 
 	void swap(Size atIndex1, Size atIndex2);
 
+	constexpr operator String() const;
+
 private:
 
 	void checkAllocationSize();
@@ -83,20 +84,23 @@ private:
 };
 
 template<typename T>
-std::ostream& operator << (std::ostream& out, const Array<T>& array)
+constexpr Array<T>::operator String() const
 {
-	out << "Array: {";
-	for (int i = 0; i < array.length(); ++i)
+	String string("Array: { ");
+	
+	for (int i = 0; i <= this->lastIndex; ++i)
 	{
-		out << array[i];
-		if (i != array.getLastIndex())
-		{
-			out << ", ";
-		}
-	}
-	out << "}";
+		string.append(this->get(i));
 
-	return out;
+		if (i != lastIndex)
+		{
+			string += ", ";
+		}
+
+		string += " }";
+	}
+
+	return string;
 }
 
 template<typename T>
@@ -307,7 +311,7 @@ const T& Array<T>::get(Size atIndex) const
 		return *allocation[atIndex];
 	}
 	
-	throw "Invalid array index!";
+	throw InvalidIndexException();
 }
 
 template<typename T>
@@ -318,7 +322,7 @@ T& Array<T>::get(Size atIndex)
 		return *allocation[atIndex];
 	}
 
-	throw "Invalid array index!";
+	throw InvalidIndexException();
 }
 
 template<typename T>

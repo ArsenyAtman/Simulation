@@ -1,7 +1,8 @@
 #ifndef CHECK_H
 #define CHECK_H
 
-#include <iostream>
+#include "Singleton.h"
+#include "Console.h"
 
 namespace TestStats
 {
@@ -17,59 +18,59 @@ namespace TestStats
 
 namespace TestCases
 {
-    void check(const char* name, bool value)
+    void check(const String& name, bool value)
     {
         if (value)
         {
-            std::cout << "[ ]";
+            Console::print("[ ]");
         }
         else
         {
-            std::cout << "[X]";
+            Console::print("[X]");
         }
 
-        std::cout << "\"" << name << "\" - ";
+        Console::print("\"" + name + "\" - ");
 
         if (value)
         {
-            std::cout << "passed.";
+            Console::print("passed.");
             ++TestStats::passedChecks;
         }
         else
         {
-            std:: cout << "failed.";
+            Console::print("failed.");
             ++TestStats::failedChecks;
         }
-        std::cout << std::endl;
+        Console::println();
     }
 
     template <typename T>
-    void check(const char* name, T actualValue, T expectedValue)
+    void check(const String& name, T actualValue, T expectedValue)
     {
         bool checkResult = (actualValue == expectedValue);
 
         if (checkResult)
         {
-            std::cout << "[ ]";
+            Console::print("[ ]");
         }
         else
         {
-            std::cout << "[X]";
+            Console::print("[X]");
         }
 
-        std::cout << "\"" << name << "\" - ";
+        Console::print("\"" + name + "\" - ");
 
         if (checkResult)
         {
-            std::cout << "passed.";
+            Console::print("passed.");
             ++TestStats::passedChecks;
         }
         else
         {
-            std:: cout << "failed. Expected " << expectedValue << " , but actual was " << actualValue << ".";
+            Singleton<Console>::get().print("failed. Expected " + String(expectedValue) + " , but actual was " + String(actualValue) + ".");
             ++TestStats::failedChecks;
         }
-        std::cout << std::endl;
+        Singleton<Console>::get().println();
     }
 }
 

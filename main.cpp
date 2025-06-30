@@ -5,10 +5,11 @@
 #include "PhysicsValues.h"
 #include "SphereBody.h"
 #include "Tests.h"
+#include "Console.h"
+#include "Singleton.h"
 
 #include <SFML/Graphics.hpp>
 
-#include <iostream>
 #include <chrono>
 
 constexpr float timeScale = 10000.0f;
@@ -25,7 +26,6 @@ sf::CircleShape planetCircles[countOfPlanets];
 
 void initCircles()
 {
-
     sf::CircleShape* planetCirclesPtr = planetCircles;
     sf::CircleShape* planetCirclesEndPtr = planetCircles + countOfPlanets;
     for ( ; planetCirclesPtr < planetCirclesEndPtr; ++planetCirclesPtr)
