@@ -21,11 +21,11 @@ namespace TestCases
     {
         if (value)
         {
-            std::cout << "[+]";
+            std::cout << "[ ]";
         }
         else
         {
-            std::cout << "[-]";
+            std::cout << "[X]";
         }
 
         std::cout << "\"" << name << "\" - ";
@@ -50,11 +50,11 @@ namespace TestCases
 
         if (checkResult)
         {
-            std::cout << "[+]";
+            std::cout << "[ ]";
         }
         else
         {
-            std::cout << "[-]";
+            std::cout << "[X]";
         }
 
         std::cout << "\"" << name << "\" - ";
