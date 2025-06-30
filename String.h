@@ -5,6 +5,8 @@
 
 #include "iostream"
 
+// TODO: implement dynamic allocation
+// TODO: add everywhere the toString() method
 class String
 {
 
