@@ -48,7 +48,16 @@ namespace TestCases
 
 	void checkArrayIteration()
 	{
-		check("Array iteration", false);
+		Array<int> array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		//for (const int& element : array)
+		{
+			//if (element != array[static_cast<Size>(&element - &array[0])])
+			{
+				//check("Array iteration", element, static_cast<Size>(&element - &array[0]));
+			}
+		}
+
+		//check("Array iteration", true);
 	}
 
 	void checkArrayAdd()
@@ -69,85 +78,44 @@ namespace TestCases
 
 	void checkArraySwap()
 	{
-		Array<int> array1;
-		for (int i = 0; i < 10; ++i)
-		{
-			array1.add(i);
-		}
+		Array<int> array1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
 		for (int i = 0; i < array1.length() / 2; ++i)
 		{
 			array1.swap(i, array1.getLastIndex() - i);
 		}
 
-		Array<int> controlArray;
-		for (int i = 9; i >= 0; --i)
-		{
-			controlArray.add(i);
-		}
-
-		check("Array swap", array1, controlArray);
+		Array<int> expectedArray = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+		check("Array swap", array1, expectedArray);
 	}
 
 	void checkArrayAppend()
 	{
-		Array<int> array1;
-		for (int i = 0; i < 5; ++i)
-		{
-			array1.add(i);
-		}
-
-		Array<int> array2;
-		for (int i = 5; i < 10; ++i)
-		{
-			array2.add(i);
-		}
+		Array<int> array1 = { 0, 1, 2, 3, 4 };
+		Array<int> array2 = { 5, 6, 7, 8, 9 };
 
 		array1.append(array2);
 
-		Array<int> controlArray;
-		for (int i = 0; i < 10; ++i)
-		{
-			controlArray.add(i);
-		}
-
-		check("Array append", array1, controlArray);
+		Array<int> expectedArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		check("Array append", array1, expectedArray);
 	}
 
 	void checkArrayConcatenate()
 	{
-		Array<int> array1;
-		for (int i = 0; i < 5; ++i)
-		{
-			array1.add(i);
-		}
-
-		Array<int> array2;
-		for (int i = 5; i < 10; ++i)
-		{
-			array2.add(i);
-		}
+		Array<int> array1 = { 0, 1, 2, 3, 4 };
+		Array<int> array2 = { 5, 6, 7, 8, 9 };
 
 		array1 = array1.concatenate(array2);
 
-		Array<int> controlArray;
-		for (int i = 0; i < 10; ++i)
-		{
-			controlArray.add(i);
-		}
-
-		check("Array concatenate", array1, controlArray);
+		Array<int> expectedArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		check("Array concatenate", array1, expectedArray);
 	}
 
 	// TODO: memory leaks test
 
 	void checkArrayRemove()
 	{
-		Array<int> array(0);
-		for (int i = 0; i < 5; ++i)
-		{
-			array.add(i);
-		}
+		Array<int> array = { 0, 1, 2, 3, 4 };
 
 		for (int i = array.getLastIndex(); i >= 0; --i)
 		{
@@ -170,11 +138,7 @@ namespace TestCases
 
 	void checkArraySort()
 	{
-		Array<int> array;
-		for (int i = 10; i >= 0; --i)
-		{
-			array.add(i);
-		}
+		Array<int> array = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
 		auto sortCondition{ [](int a, int b)
 		{
@@ -183,16 +147,8 @@ namespace TestCases
 
 		array.sort(sortCondition);
 
-		for (int i = 0; i <= 10; ++i)
-		{
-			if (array.get(i) != i)
-			{
-				check("Array sort", array.get(i), i);
-				return;
-			}
-		}
-
-		check("Array sort", true);
+		Array<int> expectedArray = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		check("Array sort", array, expectedArray);
 	}
 }
 

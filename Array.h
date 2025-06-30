@@ -2,6 +2,8 @@
 #define ARRAY_H
 
 #include "Size.h"
+#include "Move.h"
+#include <initializer_list>
 
 #include "iostream"
 
@@ -15,11 +17,12 @@ public:
 	using PickCondition = bool(*)(T element);
 	
 	Array(Size size = 10);
-	Array(const Array<T>& other); // copy constructor
-	Array(Array<T>&& other); // move constructor
+	Array(std::initializer_list<T> initializer);
+	Array(const Array<T>& other) noexcept; // copy constructor
+	Array(Array<T>&& other) noexcept; // move constructor
 
-	Array<T>& operator = (const Array<T>& other); // copy operator
-	Array<T>& operator = (Array<T>&& other); // move operator
+	Array<T>& operator = (const Array<T>& other) noexcept; // copy operator
+	Array<T>& operator = (Array<T>&& other) noexcept; // move operator
 
 	~Array();
 
@@ -39,8 +42,6 @@ public:
 	Array<T> operator + (const Array<T>& other) const { return this->concatenate(other); }
 
 	bool operator == (const Array<T>& other) const { return this->equal(other); }
-
-	// equal
 
 	//Size removeFirst(const T& value);
 	//Size removeAll(const T& value);
@@ -71,6 +72,7 @@ private:
 	void deleteAllocation();
 	void transferAllocationTo(T** newAllocation, Size newAllocationSize);
 
+	// TODO: rework it!!! Add the current size argument and implement more straightforward rules
 	Size getRecommendedAllocationSize() const;
 
 	Size allocationSize;
@@ -99,14 +101,27 @@ std::ostream& operator << (std::ostream& out, const Array<T>& array)
 
 template<typename T>
 Array<T>::Array(Size size) :
-	allocationSize(size * static_cast<Size>(1.0f + allocationGap)),
+	allocationSize(static_cast<Size>(size * (1.0f + allocationGap))),
 	allocation(allocateNew(allocationSize))
 {
 	// ...
 }
 
 template<typename T>
-Array<T>::Array(const Array<T>& other) :
+Array<T>::Array(std::initializer_list<T> initializer) :
+	allocationSize(static_cast<Size>(initializer.size() * (1.0f + allocationGap))),
+	allocation(allocateNew(allocationSize)),
+	lastIndex(static_cast<Size>(initializer.size() - 1))
+{
+	for (const T& element : initializer)
+	{
+		Size index = static_cast<Size>(&element - initializer.begin());
+		allocation[index] = new T(MOVE(element));
+	}
+}
+
+template<typename T>
+Array<T>::Array(const Array<T>& other) noexcept :
 	allocationSize(other.allocationSize),
 	allocation(allocateNew(allocationSize)),
 	lastIndex(other.lastIndex)
@@ -118,7 +133,7 @@ Array<T>::Array(const Array<T>& other) :
 }
 
 template<typename T>
-Array<T>::Array(Array<T>&& other) :
+Array<T>::Array(Array<T>&& other) noexcept :
 	allocationSize(other.allocationSize),
 	allocation(other.allocation),
 	lastIndex(other.lastIndex)
@@ -129,7 +144,7 @@ Array<T>::Array(Array<T>&& other) :
 }
 
 template<typename T>
-Array<T>& Array<T>::operator = (const Array<T>& other)
+Array<T>& Array<T>::operator = (const Array<T>& other) noexcept
 {
 	if (this == &other)
 	{
@@ -152,7 +167,7 @@ Array<T>& Array<T>::operator = (const Array<T>& other)
 }
 
 template<typename T>
-Array<T>& Array<T>::operator = (Array<T>&& other)
+Array<T>& Array<T>::operator = (Array<T>&& other) noexcept
 {
 	if (this == &other)
 	{
@@ -353,7 +368,7 @@ Size Array<T>::getRecommendedAllocationSize() const
 	{
 		return static_cast<Size>(allocationSize * (1.0f + allocationGap) + 1);
 	}
-	else if (lastIndex < allocationSize / (1.0f + allocationGap * 2.0f))
+	else if (lastIndex < static_cast<Size>(allocationSize / (1.0f + allocationGap * 2.0f)))
 	{
 		Size newSize = static_cast<Size>(allocationSize / (1.0f + allocationGap));
 		if (newSize < allocationSize)
