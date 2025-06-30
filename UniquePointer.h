@@ -64,7 +64,7 @@ UniquePointer<T>& UniquePointer<T>::operator = (UniquePointer<T>&& other) noexce
     cleanUpResource();
 
     resource = other.resource;
-    referenceCounter = other.referenceCounter();
+    referenceCounter = other.referenceCounter;
     referenceCounter->addStrongReference();
 
     other.resource = nullptr;

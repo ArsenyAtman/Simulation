@@ -2,6 +2,7 @@
 #define PLANET_H
 
 #include "Object.h"
+#include "Prototype.h"
 
 #include "Vector.h"
 #include "Math.h"
@@ -12,7 +13,7 @@
 
 #include <utility>
 
-class Planet : public Object
+class Planet : public Object, public IPrototype<Planet>
 {
 
 public:
@@ -25,6 +26,50 @@ public:
         // ...
     }
 
+    Planet(const Planet& other) noexcept :
+        Object(other.getPosition()),
+        body(other.body->clone()),
+        velocity(other.getVelocity())
+    {
+        // ...
+    }
+
+    Planet(Planet&& other) noexcept :
+        Object(other.getPosition()),
+        body(MOVE(other.body)),
+        velocity(other.getVelocity())
+    {
+        // ...
+    }
+
+    Planet& operator = (const Planet& other) noexcept
+    {
+        if (this == &other)
+        {
+            return *this;
+        }
+
+        Object::operator=(other);
+        body = UniquePointer(other.body->clone());
+        velocity = other.velocity;
+
+        return *this;
+    }
+
+    Planet& operator = (Planet&& other) noexcept
+    {
+        if (this == &other)
+        {
+            return *this;
+        }
+
+        Object::operator=(MOVE(other));
+        body = MOVE(other.body);
+        velocity = other.velocity;
+
+        return *this;
+    }
+
     const UniquePointer<Body>& getBody() const { return body; }
     const Vector& getVelocity() const { return velocity; }
 
@@ -33,6 +78,8 @@ public:
         velocity = velocity + acceleraion * deltaTime;
         setPosition(getPosition() + velocity * deltaTime);
     }
+
+    virtual Planet* clone() const override { return new Planet(*this); }
 
 private:
 

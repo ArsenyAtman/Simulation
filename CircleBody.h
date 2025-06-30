@@ -21,6 +21,8 @@ public:
 
 	virtual float getMass() const override { return Math::getPI() * Math::pow(getRadius()); }
 
+	virtual CircleBody* clone() const override { return new CircleBody(*this); }
+
 private:
 
 	float squareDensity; 

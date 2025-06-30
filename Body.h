@@ -1,7 +1,9 @@
 #ifndef BODY_H
 #define BODY_H
 
-class Body
+#include "Prototype.h"
+
+class Body : public IPrototype<Body>
 {
 
 public:

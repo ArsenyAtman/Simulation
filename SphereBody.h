@@ -21,6 +21,8 @@ public:
 
 	virtual float getMass() const override { return 4.0f / 3.0f * Math::getPI() * Math::pow(getRadius(), 3) * getDensity(); }
 
+	virtual SphereBody* clone() const override { return new SphereBody(*this); }
+
 private:
 
 	float density;

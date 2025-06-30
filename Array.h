@@ -5,6 +5,7 @@
 #include "Move.h"
 #include <initializer_list>
 #include "String.h"
+#include "InvalidIndexException.h"
 
 template <typename T>
 class Array

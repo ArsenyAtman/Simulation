@@ -23,16 +23,4 @@ private:
 	String message;
 };
 
-class InvalidIndexException : public Exception
-{
-	
-public:
-
-	InvalidIndexException() :
-		Exception("Invalid index!")
-	{
-		// ..
-	}
-};
-
 #endif
