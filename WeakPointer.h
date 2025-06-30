@@ -13,11 +13,11 @@ class WeakPointer
 public:
 
 	WeakPointer(SharedPointer<T>& sharedPointer);
-	WeakPointer(const WeakPointer<T>& other);
-	WeakPointer(const WeakPointer<T>&& other);
+	WeakPointer(const WeakPointer<T>& other) noexcept;
+	WeakPointer(const WeakPointer<T>&& other) noexcept;
 
-	WeakPointer<T>& operator = (const WeakPointer<T>& other);
-	WeakPointer<T>& operator = (const WeakPointer<T>&& other);
+	WeakPointer<T>& operator = (const WeakPointer<T>& other) noexcept;
+	WeakPointer<T>& operator = (const WeakPointer<T>&& other) noexcept;
 
 	~WeakPointer();
 
@@ -48,7 +48,7 @@ WeakPointer<T>::WeakPointer(SharedPointer<T>& sharedPointer) :
 }
 
 template<typename T>
-WeakPointer<T>::WeakPointer(const WeakPointer<T>& other) : // copy constructor
+WeakPointer<T>::WeakPointer(const WeakPointer<T>& other) noexcept : // copy constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -56,7 +56,7 @@ WeakPointer<T>::WeakPointer(const WeakPointer<T>& other) : // copy constructor
 }
 
 template<typename T>
-WeakPointer<T>::WeakPointer(const WeakPointer<T>&& other) : // move constructor
+WeakPointer<T>::WeakPointer(const WeakPointer<T>&& other) noexcept : // move constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -64,7 +64,7 @@ WeakPointer<T>::WeakPointer(const WeakPointer<T>&& other) : // move constructor
 }
 
 template<typename T>
-WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>& other) // copy operator
+WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>& other) noexcept // copy operator
 {
 	if (this == &other)
 	{
@@ -81,7 +81,7 @@ WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>& other) // copy
 }
 
 template<typename T>
-WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>&& other) // move operator
+WeakPointer<T>& WeakPointer<T>::operator = (const WeakPointer<T>&& other) noexcept // move operator
 {
 	if (this == &other)
 	{

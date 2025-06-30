@@ -15,11 +15,11 @@ public:
 
 	explicit SharedPointer(T* managedResource);
 	SharedPointer(WeakPointer<T>& weakPointer);
-	SharedPointer(const SharedPointer<T>& other);
-	SharedPointer(const SharedPointer<T>&& other);
+	SharedPointer(const SharedPointer<T>& other) noexcept;
+	SharedPointer(const SharedPointer<T>&& other) noexcept;
 
-	SharedPointer<T>& operator = (const SharedPointer<T>& other);
-	SharedPointer<T>& operator = (const SharedPointer<T>&& other);
+	SharedPointer<T>& operator = (const SharedPointer<T>& other) noexcept;
+	SharedPointer<T>& operator = (const SharedPointer<T>&& other) noexcept;
 
 	~SharedPointer();
 
@@ -58,7 +58,7 @@ SharedPointer<T>::SharedPointer(WeakPointer<T>& weakPointer):
 }
 
 template<typename T>
-SharedPointer<T>::SharedPointer(const SharedPointer<T>& other) : // copy constructor
+SharedPointer<T>::SharedPointer(const SharedPointer<T>& other) noexcept : // copy constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -66,7 +66,7 @@ SharedPointer<T>::SharedPointer(const SharedPointer<T>& other) : // copy constru
 }
 
 template<typename T>
-SharedPointer<T>::SharedPointer(const SharedPointer<T>&& other) : // move constructor
+SharedPointer<T>::SharedPointer(const SharedPointer<T>&& other) noexcept : // move constructor
 	resource(other.resource),
 	referenceCounter(other.referenceCounter)
 {
@@ -74,7 +74,7 @@ SharedPointer<T>::SharedPointer(const SharedPointer<T>&& other) : // move constr
 }
 
 template<typename T>
-SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>& other) // copy operator
+SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>& other) noexcept // copy operator
 {
 	if (this == &other)
 	{
@@ -91,7 +91,7 @@ SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>& other) /
 }
 
 template<typename T>
-SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>&& other) // move operator
+SharedPointer<T>& SharedPointer<T>::operator = (const SharedPointer<T>&& other) noexcept // move operator
 {
 	if (this == &other)
 	{

@@ -11,7 +11,7 @@ public:
 
     explicit UniquePointer(T* managedResource);
     UniquePointer(UniquePointer<T>&& other) noexcept;
-    UniquePointer<T>& operator = (UniquePointer<T>&& other);
+    UniquePointer<T>& operator = (UniquePointer<T>&& other) noexcept;
 
     // Forbid copying
     UniquePointer(const UniquePointer<T>& other) = delete;
@@ -54,7 +54,7 @@ UniquePointer<T>::UniquePointer(UniquePointer<T>&& other) noexcept :
 }
 
 template<typename T>
-UniquePointer<T>& UniquePointer<T>::operator = (UniquePointer<T>&& other)
+UniquePointer<T>& UniquePointer<T>::operator = (UniquePointer<T>&& other) noexcept
 {
     if (this == &other)
     {
