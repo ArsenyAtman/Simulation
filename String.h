@@ -35,7 +35,7 @@ public:
 
 private:
 
-	static constexpr Size allocationSize = 100;
+	static constexpr Size allocationSize = 500;
 	char string[allocationSize] {};
 	Size size = 0;
 };

@@ -31,6 +31,14 @@ public:
 	T* operator -> () { return this->get(); }
 	const T* operator -> () const { return this->get(); }
 
+	bool operator == (const SharedPointer<T>& other) const { return (this->resource == other.resource) && (this->referenceCounter == other.referenceCounter); }
+	bool operator != (const SharedPointer<T>& other) const { return !(*this == other); }
+
+	constexpr operator String() const
+	{
+		return "SharedPointer to: " + (resource ? String(*resource) : "nullptr");
+	}
+
 private:
 
 	void unreferenceResource();

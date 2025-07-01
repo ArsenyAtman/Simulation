@@ -2,11 +2,51 @@
 #define ARRAY_TEST_CASES_H
 
 #include "Array.h"
+#include "SharedPointer.h"
 
 #include "Check.h"
 
 namespace TestCases
 {
+	class TestResource {
+	public:
+		int& allocationCounter;
+		int& destructionCounter;
+		TestResource(int& allocCounterRef, int& destrCounterRef) :
+			allocationCounter(allocCounterRef),
+			destructionCounter(destrCounterRef)
+		{
+			++allocationCounter;
+		}
+
+		TestResource(const TestResource& other) :
+			allocationCounter(other.allocationCounter),
+			destructionCounter(other.destructionCounter)
+		{
+			++allocationCounter;
+		}
+
+		~TestResource()
+		{
+			++destructionCounter;
+		}
+
+		constexpr operator String() const
+		{
+			return "TestResource()";
+		}
+
+		constexpr bool operator == (const TestResource& other) const
+		{
+			return (&allocationCounter == &other.allocationCounter) && (&destructionCounter == &other.destructionCounter);
+		}
+
+		constexpr bool operator != (const TestResource& other) const
+		{
+			return !(*this == other);
+		}
+	};
+
 	void checkArrayIndexing()
 	{
 		Array<int> array(0);
@@ -128,12 +168,58 @@ namespace TestCases
 
 	void checkArrayCopy()
 	{
-		check("Array copy", false);
+		int allocationCounter = 0;
+		int destructionCounter = 0;
+
+		{
+			Array<SharedPointer<TestResource>> array = {
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter)),
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter)),
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter))
+			};
+
+			int sourceArrayLength = array.length();
+
+			Array<SharedPointer<TestResource>> newArray(array);
+
+			int expectedCountOfAllocations = array.length();
+			int expectedCountOfDestructions = 0;
+
+			check("Array copy allocations", allocationCounter, expectedCountOfAllocations);
+			check("Array copy destructions", destructionCounter, expectedCountOfDestructions);
+			check("Array copy content", newArray, array);
+			check("Array copy content length", newArray.length(), sourceArrayLength);
+		}
+
+		check("Array copy mem leak", destructionCounter, allocationCounter);
 	}
 
 	void checkArrayMove()
 	{
-		check("Array move", false);
+		int allocationCounter = 0;
+		int destructionCounter = 0;
+
+		{
+			Array<SharedPointer<TestResource>> array = {
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter)),
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter)),
+				SharedPointer<TestResource>(new TestResource(allocationCounter, destructionCounter))
+			};
+
+			int sourceArrayLength = array.length();
+
+			int expectedCountOfAllocations = array.length();
+			int expectedCountOfDestructions = 0;
+
+			Array<SharedPointer<TestResource>> newArray(MOVE(array));
+
+			check("Array move allocations", allocationCounter, expectedCountOfAllocations);
+			check("Array move destructions", destructionCounter, expectedCountOfDestructions);
+			check("Array moved content", newArray.length(), sourceArrayLength);
+			check("Array removed content", array.length(), 0);
+		}
+
+		check("Array move mem leak", destructionCounter, allocationCounter);
 	}
 
 	void checkArraySort()

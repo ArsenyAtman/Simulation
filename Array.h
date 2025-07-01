@@ -97,9 +97,9 @@ constexpr Array<T>::operator String() const
 		{
 			string += ", ";
 		}
-
-		string += " }";
 	}
+
+	string += " }";
 
 	return string;
 }
