@@ -3,12 +3,14 @@
 
 #include "Size.h"
 #include "Move.h"
-#include <initializer_list>
 #include "String.h"
 #include "InvalidIndexException.h"
+#include "Iterable.h"
+
+#include <initializer_list>
 
 template <typename T>
-class Array
+class Array : public IIterable<T>
 {
 
 public:
@@ -64,6 +66,9 @@ public:
 
 	void swap(Size atIndex1, Size atIndex2);
 
+	virtual IIterator<T>* getIterator() override;
+	virtual IConstIterator<T>* getConstIterator() const override;
+
 	constexpr operator String() const;
 
 private:
@@ -83,6 +88,20 @@ private:
 
 	float allocationGap = 0.3f;
 };
+
+#include "ArrayIterator.h"
+
+template<typename T>
+IIterator<T>* Array<T>::getIterator()
+{
+	return new ArrayIterator<T>(*this);
+}
+
+template<typename T>
+IConstIterator<T>* Array<T>::getConstIterator() const
+{
+	return new ArrayConstIterator<T>(*this);
+}
 
 template<typename T>
 constexpr Array<T>::operator String() const

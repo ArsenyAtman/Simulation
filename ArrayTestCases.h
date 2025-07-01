@@ -8,6 +8,12 @@
 
 namespace TestCases
 {
+	// TODO: check filling of an array with the default allocation size
+
+	// TODO: check removing only 0 index
+
+	// TODO: memory leaks test
+
 	class TestResource {
 	public:
 		int& allocationCounter;
@@ -89,15 +95,18 @@ namespace TestCases
 	void checkArrayIteration()
 	{
 		Array<int> array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-		//for (const int& element : array)
+		int counter = 0;
+		for (const int& element : array)
 		{
-			//if (element != array[static_cast<Size>(&element - &array[0])])
+			if (element != counter)
 			{
-				//check("Array iteration", element, static_cast<Size>(&element - &array[0]));
+				check("Array iteration", element, static_cast<Size>(&element - &array[0]));
 			}
+			
+			++counter;
 		}
 
-		//check("Array iteration", true);
+		check("Array iteration", true);
 	}
 
 	void checkArrayAdd()
@@ -111,10 +120,6 @@ namespace TestCases
 		check("Array add index", array.getLastIndex(), 4);
 		check("Array add length", array.length(), 5);
 	}
-
-	// TODO: check filling of an array with the default allocation size
-
-	// TODO: check removing only 0 index
 
 	void checkArraySwap()
 	{
@@ -150,8 +155,6 @@ namespace TestCases
 		Array<int> expectedArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 		check("Array concatenate", array1, expectedArray);
 	}
-
-	// TODO: memory leaks test
 
 	void checkArrayRemove()
 	{
