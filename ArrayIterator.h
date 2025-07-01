@@ -4,6 +4,8 @@
 #include "Iterator.h"
 #include "Array.h"
 
+// TODO: remove code duplication
+
 template<typename T>
 class ArrayIterator : public IIterator<T>
 {

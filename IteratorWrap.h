@@ -1,6 +1,8 @@
 #ifndef ITERATOR_WRAP_H
 #define ITERATOR_WRAP_H
 
+// TODO: remove code duplication
+
 template<typename T>
 class IteratorWrap
 {
@@ -33,6 +35,8 @@ public:
 		delete iterator;
 
 		iterator = other.iterator;
+
+		other.iterator = nullptr;
 	}
 
 	void operator ++ ()
@@ -70,6 +74,25 @@ public:
 	virtual ~ConstIteratorWrap()
 	{
 		delete iterator;
+	}
+
+	// Forbid copying
+	ConstIteratorWrap(const ConstIteratorWrap& other) = delete;
+	ConstIteratorWrap& operator = (const ConstIteratorWrap& other) = delete;
+
+	ConstIteratorWrap(ConstIteratorWrap&& other) :
+		iterator(other.iterator)
+	{
+		other.iterator = nullptr;
+	}
+
+	ConstIteratorWrap& operator = (ConstIteratorWrap&& other)
+	{
+		delete iterator;
+
+		iterator = other.iterator;
+
+		other.iterator = nullptr;
 	}
 
 	void operator ++ ()
